@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kube-cm1
+  namespace: default
+data:
+  TESTDATA: "kube-cm1-multi"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kube-cm2
+  namespace: default
+data:
+  TESTDATA: "kube-cm2"
+  TESTDATA2: "kube-cm2-multi"
