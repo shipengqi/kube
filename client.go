@@ -18,9 +18,7 @@ const (
 	defaultApisUriPath = "/apis"
 )
 
-var (
-	ErrorMissingNamespace = errors.New("missing namespace")
-)
+var ErrorMissingNamespace = errors.New("missing namespace")
 
 // Client represents kubernetes Client.
 type Client struct {

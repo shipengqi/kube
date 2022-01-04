@@ -21,7 +21,7 @@ func (c *Client) Apply(files []string) error {
 	return c.execute(OperationApply, files)
 }
 
-// Delete is like kubectl delete -f
+// Delete is like kubectl delete -f.
 func (c *Client) Delete(files []string) error {
 	return c.execute(OperationDelete, files)
 }

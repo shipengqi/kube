@@ -11,7 +11,7 @@ import (
 	"k8s.io/client-go/tools/remotecommand"
 )
 
-// Exec is like kubectl exec
+// Exec is like kubectl exec.
 func (c *Client) Exec(pod, container, namespace, command string) (string, string, error) {
 	p, err := c.GetPod(context.TODO(), namespace, pod)
 	if err != nil {
