@@ -2,6 +2,11 @@
 
 A simple Kubernetes client, based on [client-go](https://github.com/kubernetes/client-go).
 
+[![Test](https://github.com/shipengqi/kube/actions/workflows/go.yml/badge.svg)](https://github.com/shipengqi/kube/actions/workflows/go.yml)
+[![codecov](https://codecov.io/gh/shipengqi/kube/branch/main/graph/badge.svg?token=0KSRZKV4C8)](https://codecov.io/gh/shipengqi/kube)
+[![Release](https://img.shields.io/github/release/shipengqi/kube.svg)](https://github.com/shipengqi/kube/releases)
+[![License](https://img.shields.io/github/license/shipengqi/kube)](https://github.com/shipengqi/kube/blob/main/LICENSE)
+
 ## Quick Start
 
 ```go
