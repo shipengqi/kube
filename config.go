@@ -174,7 +174,7 @@ func (c *Config) ClusterNames() ([]string, error) {
 		return nil, err
 	}
 
-	cc := make([]string, len(cfg.Clusters))
+	cc := make([]string, 0)
 	for name := range cfg.Clusters {
 		cc = append(cc, name)
 	}

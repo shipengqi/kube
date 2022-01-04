@@ -46,7 +46,7 @@ func RetrievesDefaultKubeConfig() string {
 }
 
 // LoadDefaultKubeConfig starts by running the clientcmdapi.MigrationRules and then
-// takes the loading rules and returns a clientcmdapi.Config object
+// takes the loading rules and returns a clientcmdapi.Config object.
 func LoadDefaultKubeConfig() (*clientcmdapi.Config, error) {
 	dc := clientcmd.NewDefaultClientConfigLoadingRules()
 	return dc.Load()
@@ -72,7 +72,7 @@ func GetObjects(files []string) ([]runtime.Object, error) {
 }
 
 func getObjects(content []byte) ([]runtime.Object, error) {
-	var objs []runtime.Object
+	objs := make([]runtime.Object, 0)
 
 	delimited := bytes.Split(content, defaultYamlDelimiter)
 	for _, del := range delimited {
@@ -130,7 +130,7 @@ func retrievesMetaFromObject(obj runtime.Object) (namespace, name string, err er
 	return
 }
 
-// deduplicate removes any duplicated values and returns a new slice
+// deduplicate removes any duplicated values and returns a new slice.
 func deduplicate(s []string) []string {
 	encountered := map[string]bool{}
 	ret := make([]string, 0)
@@ -147,7 +147,7 @@ func deduplicate(s []string) []string {
 	return ret
 }
 
-// isset reports whether the given string pointer has a value
+// isset reports whether the given string pointer has a value.
 func isset(s *string) bool {
 	return s != nil && len(*s) != 0
 }
