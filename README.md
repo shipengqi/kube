@@ -59,6 +59,10 @@ func main() {
 }
 ```
 
+## Documentation
+
+You can find the docs at [go docs](https://pkg.go.dev/github.com/shipengqi/kube).
+
 ## Test
 
 ```bash
