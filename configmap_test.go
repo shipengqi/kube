@@ -13,16 +13,24 @@ import (
 
 func TestClientConfigmap(t *testing.T) {
 	mockcmname := "mockconfigmap"
+	mockcmnamenoexist := "mockcmnamenoexist"
 	mockcmnamespace := "default"
 	mockcmlabelkey := "mock-configmap"
 	mockcmlabelval := "true"
 	mockcmdata := map[string]string{
 		"mockdata": "mockdata",
 	}
-
+	mockcmdataupdate := map[string]string{
+		"mockdata":       "mockdata",
+		"mockdataupdate": "mockdataupdate",
+	}
 	// clean
 	if _, err := mockcli.GetConfigMap(context.TODO(), mockcmnamespace, mockcmname); err == nil {
 		err := mockcli.DeleteConfigMap(context.TODO(), mockcmnamespace, mockcmname)
+		require.NoError(t, err)
+	}
+	if _, err := mockcli.GetConfigMap(context.TODO(), mockcmnamespace, mockcmnamenoexist); err == nil {
+		err := mockcli.DeleteConfigMap(context.TODO(), mockcmnamespace, mockcmnamenoexist)
 		require.NoError(t, err)
 	}
 
@@ -75,8 +83,38 @@ func TestClientConfigmap(t *testing.T) {
 		}
 	})
 
+	t.Run("update:configmap", func(t *testing.T) {
+		cm := &corev1.ConfigMap{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      mockcmname,
+				Namespace: mockcmnamespace,
+			},
+			Data: mockcmdataupdate,
+		}
+		updated, err := mockcli.UpdateConfigMap(context.TODO(), cm)
+		require.NoError(t, err)
+		assert.Equal(t, mockcmdataupdate, updated.Data)
+	})
+
+	t.Run("apply:configmap:exist", func(t *testing.T) {
+		applydata := map[string]string{
+			"mockdata":      "mockdata",
+			"mockdataapply": "mockdataapply",
+		}
+		applyed, err := mockcli.ApplyConfigMap(context.TODO(), mockcmnamespace, mockcmname, applydata)
+		require.NoError(t, err)
+		assert.Equal(t, applydata, applyed.Data)
+	})
+
+	t.Run("apply:configmap:no:exist", func(t *testing.T) {
+		_, err := mockcli.ApplyConfigMap(context.TODO(), mockcmnamespace, mockcmnamenoexist, mockcmdata)
+		require.NoError(t, err)
+	})
+
 	t.Run("delete:configmap", func(t *testing.T) {
 		err := mockcli.DeleteConfigMap(context.TODO(), mockcmnamespace, mockcmname)
+		require.NoError(t, err)
+		err = mockcli.DeleteConfigMap(context.TODO(), mockcmnamespace, mockcmnamenoexist)
 		require.NoError(t, err)
 	})
 }
