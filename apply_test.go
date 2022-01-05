@@ -56,7 +56,7 @@ func TestClientApply(t *testing.T) {
 		t.Run(v.name, func(t *testing.T) {
 			err = mockcli.Apply(v.files)
 			require.NoError(t, err)
-			time.Sleep(time.Second*1)
+			time.Sleep(time.Second * 1)
 			for _, sa := range v.sas {
 				tokens := strings.Split(sa, ":")
 				_, err = k8s.CoreV1().ServiceAccounts(tokens[0]).Get(context.TODO(), tokens[1], metav1.GetOptions{})

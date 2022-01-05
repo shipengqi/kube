@@ -26,13 +26,24 @@ func TestClientSecret(t *testing.T) {
 	t.Run("create:secret", func(t *testing.T) {
 		secret := &corev1.Secret{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: mocksecretname,
+				Name:      mocksecretname,
 				Namespace: mocksecretnamespace,
 			},
 			Data: mocksecretdata,
 		}
 		_, err := mockcli.CreateSecret(context.TODO(), secret)
 		require.NoError(t, err)
+	})
+
+	t.Run("create:secret:error", func(t *testing.T) {
+		secret := &corev1.Secret{
+			ObjectMeta: metav1.ObjectMeta{
+				Name: mocksecretname,
+			},
+			Data: mocksecretdata,
+		}
+		_, err := mockcli.CreateSecret(context.TODO(), secret)
+		require.EqualError(t, err, ErrorMissingNamespace.Error())
 	})
 
 	t.Run("get:secret", func(t *testing.T) {

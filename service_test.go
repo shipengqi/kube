@@ -11,10 +11,26 @@ import (
 )
 
 func TestClientService(t *testing.T) {
+	var mockserviceport int32 = 8001
 	mockservicename := "mockservice"
 	mockservicenamespace := "default"
 	mockserviceportname := "mockportname"
-	var mockserviceport int32 = 8001
+	mocksvc := &corev1.Service{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      mockservicename,
+			Namespace: mockservicenamespace,
+		},
+		Spec: corev1.ServiceSpec{
+			Ports: []corev1.ServicePort{{
+				Name: mockserviceportname,
+				Port: mockserviceport,
+				TargetPort: intstr.IntOrString{
+					IntVal: mockserviceport,
+				},
+			}},
+		},
+	}
+
 	// clean
 	if _, err := mockcli.GetService(context.TODO(), mockservicenamespace, mockservicename); err == nil {
 		err := mockcli.DeleteService(context.TODO(), mockservicenamespace, mockservicename)
@@ -22,23 +38,16 @@ func TestClientService(t *testing.T) {
 	}
 
 	t.Run("create:service", func(t *testing.T) {
-		svc := &corev1.Service{
-			ObjectMeta: metav1.ObjectMeta{
-				Name: mockservicename,
-				Namespace: mockservicenamespace,
-			},
-			Spec:       corev1.ServiceSpec{
-				Ports: []corev1.ServicePort{{
-					Name:        mockserviceportname,
-					Port:        mockserviceport,
-					TargetPort:  intstr.IntOrString{
-						IntVal: mockserviceport,
-					},
-				}},
-			},
-		}
+		svc := mocksvc
 		_, err := mockcli.CreateService(context.TODO(), svc)
 		require.NoError(t, err)
+	})
+
+	t.Run("create:service:error", func(t *testing.T) {
+		svc := mocksvc
+		svc.Namespace = ""
+		_, err := mockcli.CreateService(context.TODO(), svc)
+		require.EqualError(t, err, ErrorMissingNamespace.Error())
 	})
 
 	t.Run("get:service", func(t *testing.T) {
