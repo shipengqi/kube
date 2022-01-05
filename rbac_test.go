@@ -10,7 +10,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func TestClientRole(t *testing.T)  {
+func TestClientRole(t *testing.T) {
 	mockrolename := "mockrole"
 	mockrolenamespace := "default"
 
@@ -23,12 +23,22 @@ func TestClientRole(t *testing.T)  {
 	t.Run("create:role", func(t *testing.T) {
 		r := &rbacv1.Role{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: mockrolename,
+				Name:      mockrolename,
 				Namespace: mockrolenamespace,
 			},
 		}
 		_, err := mockcli.CreateRole(context.TODO(), r)
 		require.NoError(t, err)
+	})
+
+	t.Run("create:role:error", func(t *testing.T) {
+		r := &rbacv1.Role{
+			ObjectMeta: metav1.ObjectMeta{
+				Name: mockrolename,
+			},
+		}
+		_, err := mockcli.CreateRole(context.TODO(), r)
+		require.EqualError(t, err, ErrorMissingNamespace.Error())
 	})
 
 	t.Run("get:role", func(t *testing.T) {
@@ -50,7 +60,7 @@ func TestClientRole(t *testing.T)  {
 	})
 }
 
-func TestClientServiceAccount(t *testing.T)  {
+func TestClientServiceAccount(t *testing.T) {
 	mocksaname := "mocksa"
 	mocksanamespace := "default"
 
@@ -63,12 +73,22 @@ func TestClientServiceAccount(t *testing.T)  {
 	t.Run("create:serviceaccount", func(t *testing.T) {
 		sa := &corev1.ServiceAccount{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: mocksaname,
+				Name:      mocksaname,
 				Namespace: mocksanamespace,
 			},
 		}
 		_, err := mockcli.CreateServiceAccount(context.TODO(), sa)
 		require.NoError(t, err)
+	})
+
+	t.Run("create:serviceaccount:error", func(t *testing.T) {
+		sa := &corev1.ServiceAccount{
+			ObjectMeta: metav1.ObjectMeta{
+				Name: mocksaname,
+			},
+		}
+		_, err := mockcli.CreateServiceAccount(context.TODO(), sa)
+		require.EqualError(t, err, ErrorMissingNamespace.Error())
 	})
 
 	t.Run("get:serviceaccount", func(t *testing.T) {
@@ -90,7 +110,7 @@ func TestClientServiceAccount(t *testing.T)  {
 	})
 }
 
-func TestClientClusterRole(t *testing.T)  {
+func TestClientClusterRole(t *testing.T) {
 	mockclusterrolename := "mockclusterrole"
 
 	// clean

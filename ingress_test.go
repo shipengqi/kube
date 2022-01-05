@@ -12,7 +12,30 @@ import (
 func TestClientIngress(t *testing.T) {
 	mockingressname := "mockingress"
 	mockingressnamespace := "default"
-
+	mockingtype := networkv1.PathType("Prefix")
+	mocking := &networkv1.Ingress{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: mockingressname,
+		},
+		Spec: networkv1.IngressSpec{
+			Rules: []networkv1.IngressRule{{
+				IngressRuleValue: networkv1.IngressRuleValue{
+					HTTP: &networkv1.HTTPIngressRuleValue{Paths: []networkv1.HTTPIngressPath{{
+						Path:     "/mock",
+						PathType: &mockingtype,
+						Backend: networkv1.IngressBackend{
+							Service: &networkv1.IngressServiceBackend{
+								Name: "mocksvc",
+								Port: networkv1.ServiceBackendPort{
+									Number: 8001,
+								},
+							},
+						},
+					}}},
+				},
+			}},
+		},
+	}
 	// clean
 	if _, err := mockcli.GetIngress(context.TODO(), mockingressnamespace, mockingressname); err == nil {
 		err := mockcli.DeleteIngress(context.TODO(), mockingressnamespace, mockingressname)
@@ -20,33 +43,17 @@ func TestClientIngress(t *testing.T) {
 	}
 
 	t.Run("create:ingress", func(t *testing.T) {
-		ty := networkv1.PathType("Prefix")
-		ing := &networkv1.Ingress{
-			ObjectMeta: metav1.ObjectMeta{
-				Name:      mockingressname,
-				Namespace: mockingressnamespace,
-			},
-			Spec: networkv1.IngressSpec{
-				Rules: []networkv1.IngressRule{{
-					IngressRuleValue: networkv1.IngressRuleValue{
-						HTTP: &networkv1.HTTPIngressRuleValue{Paths: []networkv1.HTTPIngressPath{{
-							Path:     "/mock",
-							PathType: &ty,
-							Backend:  networkv1.IngressBackend{
-								Service: &networkv1.IngressServiceBackend{
-									Name: "mocksvc",
-									Port: networkv1.ServiceBackendPort{
-										Number: 8001,
-									},
-								},
-							},
-						}}},
-					},
-				}},
-			},
-		}
+		ing := mocking
+		ing.Namespace = mockingressnamespace
 		_, err := mockcli.CreateIngress(context.TODO(), ing)
 		require.NoError(t, err)
+	})
+
+	t.Run("create:ingress:error", func(t *testing.T) {
+		ing := mocking
+		ing.Namespace = ""
+		_, err := mockcli.CreateIngress(context.TODO(), ing)
+		require.EqualError(t, err, ErrorMissingNamespace.Error())
 	})
 
 	t.Run("get:ingress", func(t *testing.T) {

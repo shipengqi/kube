@@ -22,11 +22,10 @@ func TestClientNode(t *testing.T) {
 	assert.Equal(t, list.Items[0].Name, node.Name)
 }
 
-
 func TestClientNamespace(t *testing.T) {
 	mocknsname := "mocknamespace"
 	t.Run("get:namespace", func(t *testing.T) {
-		ns, err := mockcli.GetNamespace(context.TODO(),"default")
+		ns, err := mockcli.GetNamespace(context.TODO(), "default")
 		require.NoError(t, err)
 		assert.Equal(t, "default", ns.Name)
 	})
