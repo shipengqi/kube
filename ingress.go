@@ -29,3 +29,23 @@ func (c *Client) CreateIngress(ctx context.Context, ing *networkv1.Ingress) (*ne
 func (c *Client) DeleteIngress(ctx context.Context, namespace, name string) error {
 	return c.client.NetworkingV1().Ingresses(namespace).Delete(ctx, name, metav1.DeleteOptions{})
 }
+
+// GetIngressClass returns an IngressClass with the given name.
+func (c *Client) GetIngressClass(ctx context.Context, name string) (*networkv1.IngressClass, error) {
+	return c.client.NetworkingV1().IngressClasses().Get(ctx, name, metav1.GetOptions{})
+}
+
+// GetIngressClasses returns a IngressClassList.
+func (c *Client) GetIngressClasses(ctx context.Context, label ...string) (*networkv1.IngressClassList, error) {
+	return c.client.NetworkingV1().IngressClasses().List(ctx, listOptions(label))
+}
+
+// CreateIngressClass creates a new IngressClass.
+func (c *Client) CreateIngressClass(ctx context.Context, ingc *networkv1.IngressClass) (*networkv1.IngressClass, error) {
+	return c.client.NetworkingV1().IngressClasses().Create(ctx, ingc, metav1.CreateOptions{})
+}
+
+// DeleteIngressClass deletes a IngressClass.
+func (c *Client) DeleteIngressClass(ctx context.Context, name string) error {
+	return c.client.NetworkingV1().IngressClasses().Delete(ctx, name, metav1.DeleteOptions{})
+}
