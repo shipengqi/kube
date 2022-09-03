@@ -29,7 +29,7 @@ type Client struct {
 	inCluster bool
 }
 
-// New returns a new Client.
+// New returns a new Client for the given Config.
 func New(cfg *Config) *Client {
 	return &Client{cfg: cfg}
 }
@@ -52,7 +52,7 @@ func (c *Client) WithProxy(fn func(request *http.Request) (*url.URL, error)) *Cl
 	return c
 }
 
-// DialMetrics returns a client to the metrics server.
+// DialMetrics returns a new versioned.Clientset to the metrics server.
 func (c *Client) DialMetrics() (*versioned.Clientset, error) {
 	if c.metrics != nil {
 		return c.metrics, nil
@@ -67,7 +67,7 @@ func (c *Client) DialMetrics() (*versioned.Clientset, error) {
 	return c.metrics, nil
 }
 
-// Dial returns a client to the kubernetes apiserver.
+// Dial returns a new kubernetes.Clientset to the kubernetes server.
 func (c *Client) Dial() (kubernetes.Interface, error) {
 	if c.client != nil {
 		return c.client, nil
@@ -107,7 +107,7 @@ func (c *Client) RestConfig() (*rest.Config, error) {
 	return cfg, nil
 }
 
-// ResourceClient returns a client to the given schema.GroupVersion.
+// ResourceClient returns a client for the given schema.GroupVersion.
 func (c *Client) ResourceClient(gv schema.GroupVersion) (rest.Interface, error) {
 	cfg, err := c.RestConfig()
 	if err != nil {

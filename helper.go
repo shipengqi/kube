@@ -53,7 +53,7 @@ func LoadDefaultKubeConfig() (*clientcmdapi.Config, error) {
 }
 
 // GetObjects returns the list of objects parsed from the given files.
-func GetObjects(files []string) ([]runtime.Object, error) {
+func GetObjects(files ...string) ([]runtime.Object, error) {
 	var objs []runtime.Object
 	for _, f := range files {
 		fBytes, err := ioutil.ReadFile(f)
