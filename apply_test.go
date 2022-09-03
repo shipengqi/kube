@@ -49,12 +49,12 @@ func TestClientApply(t *testing.T) {
 	}
 
 	// clean
-	err = mockcli.Delete([]string{"testdata/content-create.yaml", "testdata/content-apply.yaml", "testdata/content-apply2.yaml"})
+	err = mockcli.Delete("testdata/content-create.yaml", "testdata/content-apply.yaml", "testdata/content-apply2.yaml")
 	require.NoError(t, err)
 
 	for _, v := range tests {
 		t.Run(v.name, func(t *testing.T) {
-			err = mockcli.Apply(v.files)
+			err = mockcli.Apply(v.files...)
 			require.NoError(t, err)
 			time.Sleep(time.Second * 1)
 			for _, sa := range v.sas {
@@ -74,6 +74,6 @@ func TestClientApply(t *testing.T) {
 	}
 
 	// clean
-	err = mockcli.Delete([]string{"testdata/content-create.yaml", "testdata/content-apply.yaml", "testdata/content-apply2.yaml"})
+	err = mockcli.Delete("testdata/content-create.yaml", "testdata/content-apply.yaml", "testdata/content-apply2.yaml")
 	require.NoError(t, err)
 }

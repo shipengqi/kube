@@ -44,11 +44,17 @@ func main() {
 	log.Println(cm.Data)
 	
 	// apply file, is like "kubectl apply -f testdata/content-apply.yaml"
-	err = cli.Apply([]string{"testdata/content-apply.yaml"})
+	err = cli.Apply("testdata/content-apply.yaml")
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	// delete file, is like "kubectl delete -f testdata/content-apply.yaml"
+	err = cli.Delete("testdata/content-apply.yaml")
+	if err != nil {
+		log.Fatal(err)
+	}
+	
 	// Exec in a pod, is like "kubectl exec <pod name> -n <namespace> -c <container name> -- <command>"
 	stdout, stderr, err := cli.Exec("podname", "containername", "namespace", "command")
 	if err != nil {

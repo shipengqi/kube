@@ -13,21 +13,21 @@ const (
 	OperationDelete
 )
 
-// Apply is like kubectl apply -f
+// Apply is like 'kubectl apply -f'.
 // references:
 // - https://github.com/kubernetes/client-go/issues/193
 // - https://stackoverflow.com/questions/58783939/using-client-go-to-kubectl-apply-against-the-kubernetes-api-directly-with-mult
-func (c *Client) Apply(files []string) error {
-	return c.execute(OperationApply, files)
+func (c *Client) Apply(files ...string) error {
+	return c.execute(OperationApply, files...)
 }
 
-// Delete is like kubectl delete -f.
-func (c *Client) Delete(files []string) error {
-	return c.execute(OperationDelete, files)
+// Delete is like 'kubectl delete -f'.
+func (c *Client) Delete(files ...string) error {
+	return c.execute(OperationDelete, files...)
 }
 
-func (c *Client) execute(op Operation, files []string) error {
-	objs, err := GetObjects(files)
+func (c *Client) execute(op Operation, files ...string) error {
+	objs, err := GetObjects(files...)
 	if err != nil {
 		return err
 	}
