@@ -16,4 +16,4 @@
 .idea
 
 # Mock files
-# testdata/mock-config
+testdata/mock-config
