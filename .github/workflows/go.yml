@@ -8,7 +8,7 @@ on:
 
 jobs:
 
-  build:
+  lint:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -41,9 +41,27 @@ jobs:
         # Optional: if set to true then the action don't cache or restore ~/.cache/go-build.
         # skip-build-cache: true
 
-    - name: codecov
-      uses: codecov/codecov-action@v2
-      with:
-        flags: unittests
-        fail_ci_if_error: true
-        files: coverage.out
+  # Run E2E test against all kubernetes versions on kind
+  run-e2e-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        k8s:
+          - 1.24.0
+          - 1.25.0
+          - 1.26.0
+      fail-fast: false
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v3
+      - name: Create k8s Kind Cluster
+        uses: helm/kind-action@v1.4.0
+      - name: Run E2E test
+        run: |
+          go test -v -coverprofile=coverage.out .
+      - name: codecov
+        uses: codecov/codecov-action@v2
+        with:
+          flags: unittests
+          fail_ci_if_error: true
+          files: coverage.out
