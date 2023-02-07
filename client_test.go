@@ -28,12 +28,10 @@ func TestMain(m *testing.M) {
 	flag.StringVar(&namespace, "namespace", "default", "namespace for exec")
 	flag.Parse()
 
-	if len(kubeconfig) > 0 {
-		flags := genericclioptions.NewConfigFlags(false)
-		flags.KubeConfig = &kubeconfig
-		cfg := NewConfig(flags)
-		mockcli = New(cfg)
+	flags := genericclioptions.NewConfigFlags(false)
+	flags.KubeConfig = &kubeconfig
+	cfg := NewConfig(flags)
+	mockcli = New(cfg)
 
-		os.Exit(m.Run())
-	}
+	os.Exit(m.Run())
 }
