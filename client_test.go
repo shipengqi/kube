@@ -23,8 +23,8 @@ type testcm struct {
 
 func TestMain(m *testing.M) {
 	flag.StringVar(&kubeconfig, "kubeconfig", "", "kubeconfig file")
-	flag.StringVar(&podname, "pod", "", "pod name for exec")
-	flag.StringVar(&containername, "container", "", "container name for exec")
+	flag.StringVar(&podname, "pod", "nginx-for-exec-test", "pod name for exec")
+	flag.StringVar(&containername, "container", "nginx", "container name for exec")
 	flag.StringVar(&namespace, "namespace", "default", "namespace for exec")
 	flag.Parse()
 
