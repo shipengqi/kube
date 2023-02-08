@@ -32,7 +32,7 @@ func TestClientExec(t *testing.T) {
 	}
 
 	t.Log("exec:", podName, containerName)
-	stdout, _, err := mockcli.Exec(podName, containerName, _defaultTestNamespace, "/bin/sh -c", "/bin/ls /")
+	stdout, _, err := mockcli.Exec(podName, containerName, _defaultTestNamespace, "/bin/sh", "-c", "/bin/ls /")
 	require.NoError(t, err)
 	t.Log(stdout)
 }
