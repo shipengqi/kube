@@ -19,6 +19,9 @@ func TestClientExec(t *testing.T) {
 		// pod not found, apply the default test file
 		err = mockcli.Apply("testdata/pod-apply.yaml")
 		require.NoError(t, err)
+		got, err := mockcli.GetPod(context.TODO(), _defaultTestNamespace, _defaultTestPodName)
+		t.Log(err)
+		t.Log(got)
 	}
 
 	stdout, _, err := mockcli.Exec(_defaultTestPodName, _defaultTestContainerName, _defaultTestNamespace, "ls /")
