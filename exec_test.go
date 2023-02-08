@@ -2,6 +2,7 @@ package kube
 
 import (
 	"context"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -9,18 +10,28 @@ import (
 
 const (
 	_defaultTestNamespace = "kube-system"
+	_defaultTestPod       = "coredns"
 )
 
 func TestClientExec(t *testing.T) {
-	got, err := mockcli.GetPods(context.TODO(), _defaultTestNamespace)
+	list, err := mockcli.GetPods(context.TODO(), _defaultTestNamespace)
 	require.NoError(t, err)
-	require.NotEqual(t, len(got.Items), 0)
+	require.NotEqual(t, len(list.Items), 0)
 
-	firstPod := got.Items[0]
-	firstPodName := firstPod.Name
-	firstContainerName := firstPod.Spec.Containers[0].Name
+	var (
+		podName       string
+		containerName string
+	)
+	// exec -it coredns
+	for _, v := range list.Items {
+		if strings.Contains(strings.ToLower(v.Name), _defaultTestPod) {
+			podName = v.Name
+			containerName = v.Spec.Containers[0].Name
+		}
+	}
 
-	stdout, _, err := mockcli.Exec(firstPodName, firstContainerName, _defaultTestNamespace, "ls /")
+	t.Log("exec: ", podName, containerName)
+	stdout, _, err := mockcli.Exec(podName, containerName, _defaultTestNamespace, "ls /")
 	require.NoError(t, err)
 	t.Log(stdout)
 }
