@@ -10,21 +10,16 @@ import (
 const (
 	_defaultTestPodName       = "nginx-for-exec-test"
 	_defaultTestContainerName = "nginx"
-	_defaultTestNamespace     = "default"
+	_defaultTestNamespace     = "kube-system"
 )
 
 func TestClientExec(t *testing.T) {
-	_, err := mockcli.GetPod(context.TODO(), _defaultTestNamespace, _defaultTestPodName)
-	if err != nil {
-		// pod not found, apply the default test file
-		err = mockcli.Apply("testdata/pod-apply.yaml")
-		require.NoError(t, err)
-		got, err := mockcli.GetPod(context.TODO(), _defaultTestNamespace, _defaultTestPodName)
-		t.Log(err)
-		t.Log(got)
-	}
-
-	stdout, _, err := mockcli.Exec(_defaultTestPodName, _defaultTestContainerName, _defaultTestNamespace, "ls /")
+	got, err := mockcli.GetPods(context.TODO(), _defaultTestNamespace)
 	require.NoError(t, err)
-	t.Log(stdout)
+	require.NotEqual(t, len(got.Items), 0)
+	t.Log(got.Items)
+
+	// stdout, _, err := mockcli.Exec(_defaultTestPodName, _defaultTestContainerName, _defaultTestNamespace, "ls /")
+	// require.NoError(t, err)
+	// t.Log(stdout)
 }

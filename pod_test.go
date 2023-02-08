@@ -53,7 +53,7 @@ func TestClientPod(t *testing.T) {
 	t.Run("get:pod:list", func(t *testing.T) {
 		list, err := mockcli.GetPods(context.TODO(), mocknamespace)
 		require.NoError(t, err)
-		require.NotEqual(t, list.Items, 0)
+		require.NotEqual(t, len(list.Items), 0)
 	})
 
 	t.Run("delete:pod", func(t *testing.T) {

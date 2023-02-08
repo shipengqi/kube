@@ -74,8 +74,3 @@ You can find the docs at [go docs](https://pkg.go.dev/github.com/shipengqi/kube)
 ```bash
 go test -v . -kubeconfig <kubeconfig file>
 ```
-
-### Test Client.Exec
-```bash
-go test -v -coverprofile=coverage.out -kubeconfig <kubeconfig file> -container <container name> -pod <pod name> -namespace <namespace> .
-```
