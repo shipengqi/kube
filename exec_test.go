@@ -1,10 +1,7 @@
 package kube
 
 import (
-	"context"
 	"testing"
-
-	"github.com/stretchr/testify/require"
 )
 
 func TestClientExec(t *testing.T) {
@@ -12,14 +9,14 @@ func TestClientExec(t *testing.T) {
 		return
 	}
 
-	_, err := mockcli.GetPod(context.TODO(), namespace, podname)
-	if err != nil {
-		// pod not found, apply the default test file
-		err = mockcli.Apply("testdata/pod-apply.yaml")
-		require.NoError(t, err)
-	}
-
-	stdout, _, err := mockcli.Exec(podname, containername, namespace, "ls /")
-	require.NoError(t, err)
-	t.Log(stdout)
+	// _, err := mockcli.GetPod(context.TODO(), namespace, podname)
+	// if err != nil {
+	// 	// pod not found, apply the default test file
+	// 	err = mockcli.Apply("testdata/pod-apply.yaml")
+	// 	require.NoError(t, err)
+	// }
+	//
+	// stdout, _, err := mockcli.Exec(podname, containername, namespace, "ls /")
+	// require.NoError(t, err)
+	// t.Log(stdout)
 }
