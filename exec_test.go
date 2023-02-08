@@ -22,16 +22,17 @@ func TestClientExec(t *testing.T) {
 		podName       string
 		containerName string
 	)
-	// exec -it coredns
+	// exec coredns
 	for _, v := range list.Items {
 		if strings.Contains(strings.ToLower(v.Name), _defaultTestPod) {
 			podName = v.Name
 			containerName = v.Spec.Containers[0].Name
+			break
 		}
 	}
 
 	t.Log("exec:", podName, containerName)
-	stdout, _, err := mockcli.Exec(podName, containerName, _defaultTestNamespace, "/bin/ls /")
+	stdout, _, err := mockcli.Exec(podName, containerName, _defaultTestNamespace, "/bin/sh -c", "/bin/ls /")
 	require.NoError(t, err)
 	t.Log(stdout)
 }
