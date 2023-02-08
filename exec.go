@@ -12,7 +12,7 @@ import (
 )
 
 // Exec is like kubectl exec.
-func (c *Client) Exec(pod, container, namespace, command string) (string, string, error) {
+func (c *Client) Exec(pod, container, namespace string, command ...string) (string, string, error) {
 	p, err := c.GetPod(context.TODO(), namespace, pod)
 	if err != nil {
 		return "", "", err
@@ -28,7 +28,7 @@ func (c *Client) Exec(pod, container, namespace, command string) (string, string
 		Stderr:    true,
 		TTY:       false,
 		Container: container,
-		Command:   []string{"sh", "-c", command},
+		Command:   command,
 	}, scheme.ParameterCodec)
 
 	var (
