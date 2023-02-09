@@ -13,7 +13,16 @@ import (
 
 // Exec is like kubectl exec.
 func (c *Client) Exec(pod, container, namespace string, command ...string) (string, string, error) {
-	p, err := c.GetPod(context.TODO(), namespace, pod)
+	return c.exec(context.TODO(), pod, container, namespace, command...)
+}
+
+// ExecWithContext executes exec with context.
+func (c *Client) ExecWithContext(ctx context.Context, pod, container, namespace string, command ...string) (string, string, error) {
+	return c.exec(ctx, pod, container, namespace, command...)
+}
+
+func (c *Client) exec(ctx context.Context, pod, container, namespace string, command ...string) (string, string, error) {
+	p, err := c.GetPod(ctx, namespace, pod)
 	if err != nil {
 		return "", "", err
 	}
@@ -43,7 +52,7 @@ func (c *Client) Exec(pod, container, namespace string, command ...string) (stri
 	if err != nil {
 		return "", "", err
 	}
-	err = exec.Stream(remotecommand.StreamOptions{
+	err = exec.StreamWithContext(ctx, remotecommand.StreamOptions{
 		Stdin:  nil,
 		Stdout: &stdout,
 		Stderr: &stderr,
