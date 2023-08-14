@@ -1,4 +1,4 @@
-Thank you for contributing to jaguar!
+Thank you for contributing to kube!
 
 # Please add a summary of your change
 

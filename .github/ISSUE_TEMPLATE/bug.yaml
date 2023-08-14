@@ -23,10 +23,9 @@ body:
     validations:
       required: true
   - type: textarea
-    id: jaguar-version
+    id: kube-version
     attributes:
-      label: jaguar version
-      description: "`jaguar --version` output"
+      label: kube version
       render: bash
     validations:
       required: true
