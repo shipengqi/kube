@@ -2,8 +2,9 @@
 
 A simple Kubernetes client, based on [client-go](https://github.com/kubernetes/client-go).
 
-[![Test](https://github.com/shipengqi/kube/actions/workflows/go.yml/badge.svg)](https://github.com/shipengqi/kube/actions/workflows/go.yml)
+[![E2E](https://github.com/shipengqi/kube/actions/workflows/e2e.yaml/badge.svg)](https://github.com/shipengqi/kube/actions/workflows/e2e.yaml)
 [![codecov](https://codecov.io/gh/shipengqi/kube/branch/main/graph/badge.svg?token=0KSRZKV4C8)](https://codecov.io/gh/shipengqi/kube)
+[![Go Report Card](https://goreportcard.com/badge/github.com/shipengqi/kube)](https://goreportcard.com/report/github.com/shipengqi/kube)
 [![Release](https://img.shields.io/github/release/shipengqi/kube.svg)](https://github.com/shipengqi/kube/releases)
 [![Go Report Card](https://goreportcard.com/badge/github.com/shipengqi/kube)](https://goreportcard.com/report/github.com/shipengqi/kube)
 [![License](https://img.shields.io/github/license/shipengqi/kube)](https://github.com/shipengqi/kube/blob/main/LICENSE)
@@ -81,3 +82,9 @@ go test -v . -kubeconfig <kubeconfig file>
 ```bash
 go test -v -coverprofile=coverage.out -kubeconfig <kubeconfig file> -container <container name> -pod <pod name> -namespace <namespace> .
 ```
+
+## 🔋 JetBrains OS licenses
+
+`kube` had been being developed with **GoLand** under the **free JetBrains Open Source license(s)** granted by JetBrains s.r.o., hence I would like to express my thanks here.
+
+<a href="https://www.jetbrains.com/?from=kube" target="_blank"><img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg" alt="JetBrains Logo (Main) logo." width="250" align="middle"></a>

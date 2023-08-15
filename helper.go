@@ -2,7 +2,6 @@ package kube
 
 import (
 	"bytes"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -56,7 +55,7 @@ func LoadDefaultKubeConfig() (*clientcmdapi.Config, error) {
 func GetObjects(files ...string) ([]runtime.Object, error) {
 	var objs []runtime.Object
 	for _, f := range files {
-		fBytes, err := ioutil.ReadFile(f)
+		fBytes, err := os.ReadFile(f)
 		if err != nil {
 			return nil, err
 		}
