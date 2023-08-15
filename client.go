@@ -14,8 +14,8 @@ import (
 )
 
 const (
-	defaultApiUriPath  = "/api"
-	defaultApisUriPath = "/apis"
+	defaultAPIURIPath  = "/api"
+	defaultAPIsURIPath = "/apis"
 )
 
 var ErrorMissingNamespace = errors.New("missing namespace")
@@ -116,9 +116,9 @@ func (c *Client) ResourceClient(gv schema.GroupVersion) (rest.Interface, error) 
 	cfg.ContentConfig = resource.UnstructuredPlusDefaultContentConfig()
 	cfg.GroupVersion = &gv
 	if len(gv.Group) == 0 {
-		cfg.APIPath = defaultApiUriPath
+		cfg.APIPath = defaultAPIURIPath
 	} else {
-		cfg.APIPath = defaultApisUriPath
+		cfg.APIPath = defaultAPIsURIPath
 	}
 	return rest.RESTClientFor(cfg)
 }
