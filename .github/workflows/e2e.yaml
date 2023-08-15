@@ -20,7 +20,7 @@ jobs:
       fail-fast: false
     steps:
       - uses: actions/checkout@v3
-      - uses: helm/kind-action@v1.5.0
+      - uses: helm/kind-action@v1.8.0
       - run: go test -v -coverprofile=coverage.out .
       - name: codecov
         uses: codecov/codecov-action@v3
