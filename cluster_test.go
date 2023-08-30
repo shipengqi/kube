@@ -57,3 +57,9 @@ func TestClientNamespace(t *testing.T) {
 		require.NoError(t, err)
 	})
 }
+
+func TestClientVersion(t *testing.T) {
+	info, err := mockcli.GetVersion()
+	require.NoError(t, err)
+	t.Log(info.String())
+}
