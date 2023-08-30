@@ -5,7 +5,13 @@ import (
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/version"
 )
+
+// GetVersion returns server's version.
+func (c *Client) GetVersion() (*version.Info, error) {
+	return c.client.Discovery().ServerVersion()
+}
 
 // GetNodes returns a NodeList.
 func (c *Client) GetNodes(ctx context.Context, label ...string) (*corev1.NodeList, error) {
