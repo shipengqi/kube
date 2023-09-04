@@ -4,7 +4,6 @@ import (
 	"context"
 	"strings"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/require"
 )
@@ -16,35 +15,37 @@ const (
 
 func TestClientExec(t *testing.T) {
 
-	containerName := "nginx"
-	podNamespace := "default"
-	podName := "nginx"
+	var containerName string
 
-	err := mockcli.Apply("testdata/pod-apply.yaml")
-	require.NoError(t, err)
+	podNamespace := _defaultTestNamespace
+	podName := _defaultTestPod
 
-	list, err := mockcli.GetPods(context.TODO(), podNamespace)
-	require.NoError(t, err)
-	require.NotEqual(t, len(list.Items), 0)
-
-	for _, v := range list.Items {
-		if strings.Contains(strings.ToLower(v.Name), podName) {
-			podName = v.Name
-			containerName = v.Spec.Containers[0].Name
-			break
-		}
+	if namespace != "" {
+		podNamespace = namespace
 	}
-	for i := 0; i < 10; i++ {
-		p, err := mockcli.GetPod(context.TODO(), podNamespace, podName)
+
+	if podname != "" && containername != "" {
+		podName = podname
+		containerName = containername
+	} else {
+		list, err := mockcli.GetPods(context.TODO(), podNamespace)
 		require.NoError(t, err)
-		t.Log("check pod status:", podName, podNamespace, p.Status, "=====", p.Status.Message)
-		time.Sleep(2 * time.Second)
+		require.NotEqual(t, len(list.Items), 0)
+
+		// exec coredns
+		for _, v := range list.Items {
+			if strings.Contains(strings.ToLower(v.Name), podName) {
+				podName = v.Name
+				containerName = v.Spec.Containers[0].Name
+				break
+			}
+		}
 	}
 
 	// Todo, create a pod, and test Exec(), currently just skip validating the error
 	t.Log("exec:", podName, containerName)
 	stdout, _, err := mockcli.Exec(podName, containerName, podNamespace, "/bin/sh", "-c", "/bin/ls /")
-	t.Log(err.Error())
 	require.Error(t, err)
+	t.Log(err.Error())
 	t.Log(stdout)
 }
