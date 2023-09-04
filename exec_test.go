@@ -1,6 +1,8 @@
 package kube
 
 import (
+	"context"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -17,30 +19,22 @@ func TestClientExec(t *testing.T) {
 	podNamespace := "default"
 	podName := "nginx"
 
-	// if namespace != "" {
-	// 	podNamespace = namespace
-	// }
-	//
-	// if podname != "" && containername != "" {
-	// 	podName = podname
-	// 	containerName = containername
-	// } else {
-	// 	list, err := mockcli.GetPods(context.TODO(), podNamespace)
-	// 	require.NoError(t, err)
-	// 	require.NotEqual(t, len(list.Items), 0)
-	//
-	// 	// exec coredns
-	// 	for _, v := range list.Items {
-	// 		if strings.Contains(strings.ToLower(v.Name), podName) {
-	// 			podName = v.Name
-	// 			containerName = v.Spec.Containers[0].Name
-	// 			break
-	// 		}
-	// 	}
-	// }
-
 	err := mockcli.Apply("testdata/pod-apply.yaml")
 	require.NoError(t, err)
+
+	list, err := mockcli.GetPods(context.TODO(), podNamespace)
+	require.NoError(t, err)
+	require.NotEqual(t, len(list.Items), 0)
+
+	// exec coredns
+	for _, v := range list.Items {
+		if strings.Contains(strings.ToLower(v.Name), podName) {
+			podName = v.Name
+			containerName = v.Spec.Containers[0].Name
+			break
+		}
+	}
+
 	// Todo, create a pod, and test Exec(), currently just skip validating the error
 	t.Log("exec:", "nginx", "nginx")
 	stdout, _, err := mockcli.Exec(podName, containerName, podNamespace, "/bin/sh", "-c", "/bin/ls /")
