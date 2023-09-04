@@ -9,8 +9,8 @@ import (
 )
 
 const (
-	_defaultTestNamespace = "kube-system"
-	_defaultTestPod       = "coredns"
+	_defaultTestNamespace = "ingress-nginx"
+	_defaultTestPod       = "nginx"
 )
 
 func TestClientExec(t *testing.T) {
@@ -43,8 +43,8 @@ func TestClientExec(t *testing.T) {
 	}
 
 	t.Log("exec:", podName, containerName)
-	stdout, _, err := mockcli.Exec(podName, containerName, podNamespace, "ctr", "-v")
-	require.Error(t, err)
+	stdout, _, err := mockcli.Exec(podName, containerName, podNamespace, "echo", "hello")
+	require.NoError(t, err)
 	t.Log(err.Error())
 	t.Log(stdout)
 }
