@@ -40,7 +40,8 @@ func TestClientExec(t *testing.T) {
 	// }
 
 	err := mockcli.Apply("testdata/pod-apply.yaml")
-
+	t.Log(err.Error())
+	require.Error(t, err)
 	// Todo, create a pod, and test Exec(), currently just skip validating the error
 	t.Log("exec:", "nginx", "nginx")
 	stdout, _, err := mockcli.Exec(podName, containerName, podNamespace, "/bin/sh", "-c", "/bin/ls /")
