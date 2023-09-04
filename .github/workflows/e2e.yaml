@@ -3,8 +3,14 @@ name: test
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
   pull_request:
     branches: [ main ]
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
 
 jobs:
   # Run E2E test against all kubernetes versions on kind
@@ -24,6 +30,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - run: docker pull nginx
       - uses: helm/kind-action@v1.8.0
       - run: go test -v -coverprofile=coverage.out .
       - name: codecov

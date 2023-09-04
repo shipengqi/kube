@@ -5,7 +5,13 @@ on:
       - v*
     branches:
       - main
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
   pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
 permissions:
   contents: read
 
