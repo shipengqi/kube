@@ -27,12 +27,16 @@ func TestClientExec(t *testing.T) {
 	require.NotEqual(t, len(list.Items), 0)
 
 	for _, v := range list.Items {
-		t.Log("pod name:", v.Name, v.Status)
 		if strings.Contains(strings.ToLower(v.Name), podName) {
 			podName = v.Name
 			containerName = v.Spec.Containers[0].Name
 			break
 		}
+	}
+	for i := 0; i < 10; i++ {
+		p, err := mockcli.GetPod(context.TODO(), podNamespace, podName)
+		require.NoError(t, err)
+		t.Log("check pod status:", podName, podNamespace, p.Status, "=====", p.Status.Message)
 	}
 
 	// Todo, create a pod, and test Exec(), currently just skip validating the error
