@@ -26,8 +26,8 @@ func TestClientExec(t *testing.T) {
 	require.NoError(t, err)
 	require.NotEqual(t, len(list.Items), 0)
 
-	// exec coredns
 	for _, v := range list.Items {
+		t.Log("pod name:", v.Name)
 		if strings.Contains(strings.ToLower(v.Name), podName) {
 			podName = v.Name
 			containerName = v.Spec.Containers[0].Name
@@ -36,7 +36,7 @@ func TestClientExec(t *testing.T) {
 	}
 
 	// Todo, create a pod, and test Exec(), currently just skip validating the error
-	t.Log("exec:", "nginx", "nginx")
+	t.Log("exec:", podName, containerName)
 	stdout, _, err := mockcli.Exec(podName, containerName, podNamespace, "/bin/sh", "-c", "/bin/ls /")
 	t.Log(err.Error())
 	require.Error(t, err)
