@@ -42,9 +42,8 @@ func TestClientExec(t *testing.T) {
 		}
 	}
 
-	// Todo, create a pod, and test Exec(), currently just skip validating the error
 	t.Log("exec:", podName, containerName)
-	stdout, _, err := mockcli.Exec(podName, containerName, podNamespace, "/bin/ls", "/")
+	stdout, _, err := mockcli.Exec(podName, containerName, podNamespace, "ls", "/")
 	require.Error(t, err)
 	t.Log(err.Error())
 	t.Log(stdout)
