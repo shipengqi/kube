@@ -4,6 +4,7 @@ import (
 	"context"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/require"
 )
@@ -37,6 +38,7 @@ func TestClientExec(t *testing.T) {
 		p, err := mockcli.GetPod(context.TODO(), podNamespace, podName)
 		require.NoError(t, err)
 		t.Log("check pod status:", podName, podNamespace, p.Status, "=====", p.Status.Message)
+		time.Sleep(2 * time.Second)
 	}
 
 	// Todo, create a pod, and test Exec(), currently just skip validating the error
