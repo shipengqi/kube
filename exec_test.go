@@ -2,6 +2,7 @@ package kube
 
 import (
 	"context"
+	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
 
@@ -32,7 +33,6 @@ func TestClientExec(t *testing.T) {
 		require.NoError(t, err)
 		require.NotEqual(t, len(list.Items), 0)
 
-		// exec coredns
 		for _, v := range list.Items {
 			if strings.Contains(strings.ToLower(v.Name), podName) {
 				podName = v.Name
@@ -45,6 +45,6 @@ func TestClientExec(t *testing.T) {
 	t.Log("exec:", podName, containerName)
 	stdout, _, err := mockcli.Exec(podName, containerName, podNamespace, "echo", "hello")
 	require.NoError(t, err)
-	t.Log(err.Error())
 	t.Log(stdout)
+	assert.Equal(t, "hello", stdout)
 }
