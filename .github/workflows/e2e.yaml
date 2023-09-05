@@ -3,8 +3,14 @@ name: test
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
   pull_request:
     branches: [ main ]
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
 
 jobs:
   # Run E2E test against all kubernetes versions on kind
@@ -17,10 +23,13 @@ jobs:
           - 1.25.0
           - 1.26.0
           - 1.27.0
+          - 1.28.0
       fail-fast: false
     steps:
       - uses: actions/checkout@v3
       - uses: helm/kind-action@v1.8.0
+      - run: kubectl apply -f testdata/nginx.yaml
+      - run: kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app=nginx --timeout=300s
       - run: go test -v -coverprofile=coverage.out .
       - name: codecov
         uses: codecov/codecov-action@v3

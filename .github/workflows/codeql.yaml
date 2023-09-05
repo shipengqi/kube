@@ -2,8 +2,14 @@ name: "codeql"
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
   pull_request:
     branches: [ main ]
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
 jobs:
   analyze:
     name: analyze

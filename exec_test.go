@@ -2,6 +2,7 @@ package kube
 
 import (
 	"context"
+	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
 
@@ -9,8 +10,8 @@ import (
 )
 
 const (
-	_defaultTestNamespace = "kube-system"
-	_defaultTestPod       = "coredns"
+	_defaultTestNamespace = "ingress-nginx"
+	_defaultTestPod       = "nginx"
 )
 
 func TestClientExec(t *testing.T) {
@@ -32,7 +33,6 @@ func TestClientExec(t *testing.T) {
 		require.NoError(t, err)
 		require.NotEqual(t, len(list.Items), 0)
 
-		// exec coredns
 		for _, v := range list.Items {
 			if strings.Contains(strings.ToLower(v.Name), podName) {
 				podName = v.Name
@@ -42,9 +42,9 @@ func TestClientExec(t *testing.T) {
 		}
 	}
 
-	// Todo, create a pod, and test Exec(), currently just skip validating the error
 	t.Log("exec:", podName, containerName)
-	stdout, _, err := mockcli.Exec(podName, containerName, podNamespace, "/bin/sh", "-c", "/bin/ls /")
-	require.Error(t, err)
+	stdout, _, err := mockcli.Exec(podName, containerName, podNamespace, "echo", "hello")
+	require.NoError(t, err)
 	t.Log(stdout)
+	assert.Equal(t, "hello", stdout)
 }
