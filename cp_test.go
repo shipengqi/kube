@@ -34,21 +34,42 @@ func TestCopy(t *testing.T) {
 
 	})
 
+	t.Run("upload dir", func(t *testing.T) {
+		err := mockcli.Upload(context.TODO(), podName, containerName, podNamespace, "testdata/uploaddir", "/testdata")
+		require.NoError(t, err)
+
+		out, _, err := mockcli.Exec(podName, containerName, podNamespace, "ls", "/testdata")
+		require.NoError(t, err)
+		assert.Contains(t, out, "uploaddir")
+
+	})
+
 	t.Run("should download err", func(t *testing.T) {
 		err := mockcli.Download(context.TODO(), podName, containerName, podNamespace, "testdata/noexists.txt", "testdata")
-		t.Log(err.Error())
+		require.ErrorContains(t, err, " testdata/noexists.txt: Cannot stat: No such file or directory")
 	})
 
 	t.Run("download file", func(t *testing.T) {
-		err := mockcli.Download(context.TODO(), podName, containerName, podNamespace, "testdata/upload.txt", "testdata")
+		err := mockcli.Download(context.TODO(), podName, containerName, podNamespace, "testdata/upload.txt", "testdata/downdir")
 		require.NoError(t, err)
 		files, err := os.ReadDir("testdata")
 		require.NoError(t, err)
 		for _, v := range files {
 			t.Log(v.Name(), v.IsDir())
 		}
-		_, _, err = mockcli.Exec(podName, containerName, podNamespace, "rm", "-rf", "/testdata")
-		require.NoError(t, err)
+		// _, _, err = mockcli.Exec(podName, containerName, podNamespace, "rm", "-rf", "/testdata")
+		// require.NoError(t, err)
 	})
 
+	t.Run("download dir", func(t *testing.T) {
+		err := mockcli.Download(context.TODO(), podName, containerName, podNamespace, "testdata/uploaddir", "testdata/downdir")
+		require.NoError(t, err)
+		files, err := os.ReadDir("testdata")
+		require.NoError(t, err)
+		for _, v := range files {
+			t.Log(v.Name(), v.IsDir())
+		}
+		// _, _, err = mockcli.Exec(podName, containerName, podNamespace, "rm", "-rf", "/testdata")
+		// require.NoError(t, err)
+	})
 }
