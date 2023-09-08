@@ -72,9 +72,13 @@ func (c *Client) Upload(ctx context.Context, pod, container, namespace, src, dst
 	if err := c.validateExecResource(ctx, pod, container, namespace); err != nil {
 		return err
 	}
-	if err := makeTar(src, "tmp.tar"); err != nil {
+
+	tarName := getTmpTarName(src)
+	if err := makeTar(src, tarName); err != nil {
 		return err
 	}
+	defer func() { _ = os.Remove(tarName) }()
+
 	if dst != "/" && strings.HasSuffix(string(dst[len(dst)-1]), "/") {
 		dst = dst[:len(dst)-1]
 	}
@@ -100,7 +104,7 @@ func (c *Client) Upload(ctx context.Context, pod, container, namespace, src, dst
 	if err != nil {
 		return err
 	}
-	data, err := os.ReadFile("tmp.tar")
+	data, err := os.ReadFile(tarName)
 	if err != nil {
 		return err
 	}
@@ -113,6 +117,7 @@ func (c *Client) Upload(ctx context.Context, pod, container, namespace, src, dst
 	}); err != nil {
 		return fmt.Errorf("exec.StreamWithContext, %s, %s", err.Error(), ebuf.String())
 	}
+
 	return nil
 }
 
@@ -229,6 +234,11 @@ func createFile(src io.Reader, dst string, mode os.FileMode) error {
 
 func getPrefix(fpath string) string {
 	return strings.TrimLeft(fpath, "/")
+}
+
+func getTmpTarName(fpath string) string {
+	names := strings.Split(path.Base(fpath), ".")
+	return fmt.Sprintf("%s/%s.tar", os.TempDir(), names[0])
 }
 
 // stripPathShortcuts removes any leading or trailing "../" from a given path

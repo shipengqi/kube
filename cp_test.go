@@ -41,7 +41,6 @@ func TestCopy(t *testing.T) {
 		out, _, err := mockcli.Exec(podName, containerName, podNamespace, "ls", "/testdata")
 		require.NoError(t, err)
 		assert.Contains(t, out, "uploaddir")
-
 	})
 
 	t.Run("should download err", func(t *testing.T) {
