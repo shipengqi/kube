@@ -8,13 +8,13 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
-	corev1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"os"
 	"path"
 	"path/filepath"
 	"strings"
 
+	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/tools/remotecommand"
 )
 
