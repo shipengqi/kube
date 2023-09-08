@@ -28,12 +28,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: helm/kind-action@v1.8.0
-      - run: kubectl apply -f testdata/nginx.yaml
-      - run: kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app=nginx --timeout=300s
+      - name: Prepare
+        run: kubectl apply -f testdata/nginx.yaml
+      - name: Readiness
+        run: kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app=nginx --timeout=500s
       - run: go test -v -coverprofile=coverage.out .
-      - name: codecov
+      - name: Codecov
         uses: codecov/codecov-action@v3
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           flags: unittests
           fail_ci_if_error: true
           files: coverage.out

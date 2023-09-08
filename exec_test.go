@@ -2,10 +2,10 @@ package kube
 
 import (
 	"context"
-	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -15,11 +15,18 @@ const (
 )
 
 func TestClientExec(t *testing.T) {
+	podName, containerName, podNamespace := getResourceNames(t)
 
-	var containerName string
+	t.Log("exec:", podName, containerName)
+	stdout, _, err := mockcli.Exec(podName, containerName, podNamespace, "echo", "hello")
+	require.NoError(t, err)
+	t.Log(stdout)
+	assert.Equal(t, "hello", stdout)
+}
 
-	podNamespace := _defaultTestNamespace
-	podName := _defaultTestPod
+func getResourceNames(t *testing.T) (podName, containerName, podNamespace string) {
+	podNamespace = _defaultTestNamespace
+	podName = _defaultTestPod
 
 	if namespace != "" {
 		podNamespace = namespace
@@ -41,10 +48,5 @@ func TestClientExec(t *testing.T) {
 			}
 		}
 	}
-
-	t.Log("exec:", podName, containerName)
-	stdout, _, err := mockcli.Exec(podName, containerName, podNamespace, "echo", "hello")
-	require.NoError(t, err)
-	t.Log(stdout)
-	assert.Equal(t, "hello", stdout)
+	return
 }
