@@ -65,7 +65,7 @@ func main() {
 	}
 	log.Println(stdout)
 
-	// Upload uploads local file to a remote pod
+	// Uploads local file to a remote pod
 	err = cli.Upload(context.TODO(), "podname", "containername", "namespace", "testdata/upload.txt", "/testdata")
 	if err != nil {
 		log.Fatal(err)
