@@ -64,6 +64,18 @@ func main() {
 		log.Fatal(err)
 	}
 	log.Println(stdout)
+
+	// Exec in a pod, is like "kubectl exec <pod name> -n <namespace> -c <container name> -- <command>"
+	err = cli.Upload(context.TODO(), "podname", "containername", "namespace", "testdata/upload.txt", "/testdata")
+	if err != nil {
+		log.Fatal(err)
+	}
+	
+	// Downloads file from a remote pod to local file system
+	err = cli.Download(context.TODO(), "podname", "containername", "namespace", "testdata/upload.txt", "testdata")
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 ```
 
@@ -77,7 +89,7 @@ You can find the docs at [go docs](https://pkg.go.dev/github.com/shipengqi/kube)
 go test -v . -kubeconfig <kubeconfig file>
 ```
 
-### Test Client.Exec
+Tests Client.Upload, Client.Download And Client.Exec with specified pod, container, namespace:
 
 ```bash
 go test -v -kubeconfig <kubeconfig file> -container <container name> -pod <pod name> -namespace <namespace> .

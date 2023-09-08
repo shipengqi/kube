@@ -2,6 +2,7 @@ package kube
 
 import (
 	"context"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -12,8 +13,35 @@ func TestCopy(t *testing.T) {
 
 	podName, containerName, podNamespace := getResourceNames(t)
 
-	t.Run("upload", func(t *testing.T) {
+	t.Run("upload file to dir", func(t *testing.T) {
 		err := mockcli.Upload(context.TODO(), podName, containerName, podNamespace, "testdata/upload.txt", "/testdata")
+		require.NoError(t, err)
+
+		out, _, err := mockcli.Exec(podName, containerName, podNamespace, "ls", "-l", "/testdata")
+		require.NoError(t, err)
+		t.Log(out)
+	})
+
+	t.Run("upload file to sub dir", func(t *testing.T) {
+		err := mockcli.Upload(context.TODO(), podName, containerName, podNamespace, "testdata/upload.txt", "/testdata/upload.txt")
+		require.NoError(t, err)
+
+		out, _, err := mockcli.Exec(podName, containerName, podNamespace, "ls", "-l", "/testdata")
+		require.NoError(t, err)
+		t.Log(out)
+	})
+
+	t.Run("upload file as file", func(t *testing.T) {
+		err := mockcli.Upload(context.TODO(), podName, containerName, podNamespace, "testdata/upload.txt", "upload.txt")
+		require.NoError(t, err)
+
+		out, _, err := mockcli.Exec(podName, containerName, podNamespace, "ls", "-l", "/")
+		require.NoError(t, err)
+		t.Log(out)
+	})
+
+	t.Run("upload dir", func(t *testing.T) {
+		err := mockcli.Upload(context.TODO(), podName, containerName, podNamespace, "testdata/uploaddir", "/testdata")
 		require.NoError(t, err)
 
 		out, _, err := mockcli.Exec(podName, containerName, podNamespace, "ls", "/testdata")
@@ -24,6 +52,11 @@ func TestCopy(t *testing.T) {
 	t.Run("download", func(t *testing.T) {
 		err := mockcli.Download(context.TODO(), podName, containerName, podNamespace, "testdata/upload.txt", "testdata")
 		require.NoError(t, err)
+		files, err := os.ReadDir("testdata")
+		require.NoError(t, err)
+		for _, v := range files {
+			t.Log(v.Name(), v.IsDir())
+		}
 	})
 
 }
