@@ -3,12 +3,19 @@ package kube
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"strings"
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/tools/remotecommand"
+)
+
+type ExecRequestMethod string
+
+const (
+	ExecPostRequest ExecRequestMethod = "POST"
+	ExecGetRequest  ExecRequestMethod = "GET"
 )
 
 // Exec is like kubectl exec.
@@ -22,24 +29,18 @@ func (c *Client) ExecWithContext(ctx context.Context, pod, container, namespace 
 }
 
 func (c *Client) exec(ctx context.Context, pod, container, namespace string, command ...string) (string, string, error) {
-	p, err := c.GetPod(ctx, namespace, pod)
+	err := c.validateExecResource(ctx, pod, container, namespace)
 	if err != nil {
 		return "", "", err
 	}
-	req := c.client.CoreV1().RESTClient().Post().
-		Resource("pods").Name(p.Name).
-		Namespace(p.Namespace).
-		SubResource("exec")
-	req.VersionedParams(&corev1.PodExecOptions{
+
+	req := c.RemoteExecRequest(ExecPostRequest, pod, namespace, &corev1.PodExecOptions{
 		TypeMeta:  metav1.TypeMeta{},
-		Stdin:     false,
 		Stdout:    true,
 		Stderr:    true,
-		TTY:       false,
 		Container: container,
 		Command:   command,
-	}, scheme.ParameterCodec)
-
+	})
 	var (
 		stderr bytes.Buffer
 		stdout bytes.Buffer
@@ -61,4 +62,24 @@ func (c *Client) exec(ctx context.Context, pod, container, namespace string, com
 		return "", "", err
 	}
 	return strings.TrimSpace(stdout.String()), strings.TrimSpace(stderr.String()), err
+}
+
+func (c *Client) validateExecResource(ctx context.Context, pod, container, namespace string) error {
+	p, err := c.GetPod(ctx, namespace, pod)
+	if err != nil {
+		return err
+	}
+	if container != "" {
+		found := false
+		for _, co := range p.Spec.Containers {
+			if co.Name == container {
+				found = true
+				break
+			}
+		}
+		if !found {
+			return fmt.Errorf("%s not found", container)
+		}
+	}
+	return nil
 }

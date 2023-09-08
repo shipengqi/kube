@@ -5,11 +5,14 @@ import (
 	"net/http"
 	"net/url"
 
+	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/cli-runtime/pkg/resource"
 	"k8s.io/client-go/kubernetes"
+	clischeme "k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
+	"k8s.io/client-go/tools/remotecommand"
 	"k8s.io/metrics/pkg/client/clientset/versioned"
 )
 
@@ -121,4 +124,27 @@ func (c *Client) ResourceClient(gv schema.GroupVersion) (rest.Interface, error) 
 		cfg.APIPath = defaultAPIsURIPath
 	}
 	return rest.RESTClientFor(cfg)
+}
+
+// RemoteExecRequest returns a client for the given schema.GroupVersion.
+func (c *Client) RemoteExecRequest(method ExecRequestMethod, pod, namespace string, options *corev1.PodExecOptions) *rest.Request {
+	return c.client.CoreV1().RESTClient().Verb(string(method)).
+		Resource("pods").Name(pod).
+		Namespace(namespace).
+		SubResource("exec").
+		VersionedParams(options, clischeme.ParameterCodec)
+}
+
+// RemoteExecutor returns a client for the given schema.GroupVersion.
+func (c *Client) RemoteExecutor(req *rest.Request) (remotecommand.Executor, error) {
+	restcfg, err := c.RestConfig()
+	if err != nil {
+		return nil, err
+	}
+
+	executor, err := remotecommand.NewSPDYExecutor(restcfg, "POST", req.URL())
+	if err != nil {
+		return nil, err
+	}
+	return executor, nil
 }
