@@ -27,10 +27,10 @@ func TestCopy(t *testing.T) {
 	})
 
 	t.Run("upload file to sub dir", func(t *testing.T) {
-		err := mockcli.Upload(context.TODO(), podName, containerName, podNamespace, "testdata/upload.txt", "/testdfile/upload.txt")
+		err := mockcli.Upload(context.TODO(), podName, containerName, podNamespace, "testdata/upload.txt", "/testdata/sub/upload.txt")
 		require.NoError(t, err)
 
-		out, _, err := mockcli.Exec(podName, containerName, podNamespace, "ls", "-l", "/testdfile")
+		out, _, err := mockcli.Exec(podName, containerName, podNamespace, "ls", "-l", "/testdata")
 		require.NoError(t, err)
 		t.Log(out)
 	})
