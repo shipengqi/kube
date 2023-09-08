@@ -38,10 +38,10 @@ func TestCopy(t *testing.T) {
 		err := mockcli.Upload(context.TODO(), podName, containerName, podNamespace, "testdata/uploaddir", "/testdata")
 		require.NoError(t, err)
 
-		out, _, err := mockcli.Exec(podName, containerName, podNamespace, "ls", "-l", "/testdata")
+		out, _, err := mockcli.Exec(podName, containerName, podNamespace, "ls", "-l", "/testdata/testdata")
 		t.Log(out)
 		require.NoError(t, err)
-		// assert.Contains(t, out, "uploaddir")
+		assert.Contains(t, out, "uploaddir")
 	})
 
 	t.Run("should download err", func(t *testing.T) {
@@ -57,19 +57,17 @@ func TestCopy(t *testing.T) {
 		for _, v := range files {
 			t.Log(v.Name(), v.IsDir())
 		}
+	})
+
+	t.Run("download dir", func(t *testing.T) {
+		err := mockcli.Download(context.TODO(), podName, containerName, podNamespace, "testdata/testdata/uploaddir", "testdata/downdir")
+		require.NoError(t, err)
+		files, err := os.ReadDir("testdata")
+		require.NoError(t, err)
+		for _, v := range files {
+			t.Log(v.Name(), v.IsDir())
+		}
 		// _, _, err = mockcli.Exec(podName, containerName, podNamespace, "rm", "-rf", "/testdata")
 		// require.NoError(t, err)
 	})
-
-	// t.Run("download dir", func(t *testing.T) {
-	// 	err := mockcli.Download(context.TODO(), podName, containerName, podNamespace, "testdata/uploaddir", "testdata/downdir")
-	// 	require.NoError(t, err)
-	// 	files, err := os.ReadDir("testdata")
-	// 	require.NoError(t, err)
-	// 	for _, v := range files {
-	// 		t.Log(v.Name(), v.IsDir())
-	// 	}
-	// 	_, _, err = mockcli.Exec(podName, containerName, podNamespace, "rm", "-rf", "/testdata")
-	// 	require.NoError(t, err)
-	// })
 }
