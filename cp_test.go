@@ -39,7 +39,6 @@ func TestCopy(t *testing.T) {
 		require.NoError(t, err)
 
 		out, _, err := mockcli.Exec(podName, containerName, podNamespace, "ls", "-l", "/testdata/testdata")
-		t.Log(out)
 		require.NoError(t, err)
 		assert.Contains(t, out, "uploaddir")
 	})
@@ -52,7 +51,7 @@ func TestCopy(t *testing.T) {
 	t.Run("download file", func(t *testing.T) {
 		err := mockcli.Download(context.TODO(), podName, containerName, podNamespace, "testdata/upload.txt", "testdata/downdir")
 		require.NoError(t, err)
-		files, err := os.ReadDir("testdata")
+		files, err := os.ReadDir("testdata/downdir")
 		require.NoError(t, err)
 		for _, v := range files {
 			t.Log(v.Name(), v.IsDir())
@@ -62,7 +61,7 @@ func TestCopy(t *testing.T) {
 	t.Run("download dir", func(t *testing.T) {
 		err := mockcli.Download(context.TODO(), podName, containerName, podNamespace, "testdata/testdata/uploaddir", "testdata/downdir")
 		require.NoError(t, err)
-		files, err := os.ReadDir("testdata")
+		files, err := os.ReadDir("testdata/downdir")
 		require.NoError(t, err)
 		for _, v := range files {
 			t.Log(v.Name(), v.IsDir())
