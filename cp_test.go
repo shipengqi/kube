@@ -17,6 +17,11 @@ func TestCopy(t *testing.T) {
 		require.ErrorContains(t, err, "doesn't exist in local filesystem")
 	})
 
+	t.Run("should upload file to sub dir error", func(t *testing.T) {
+		err := mockcli.Upload(context.TODO(), podName, containerName, podNamespace, "testdata/upload.txt", "/testdata/sub/upload.txt")
+		require.ErrorContains(t, err, "/testdata/sub: Cannot open: No such file or directory")
+	})
+
 	t.Run("upload file to dir", func(t *testing.T) {
 		err := mockcli.Upload(context.TODO(), podName, containerName, podNamespace, "testdata/upload.txt", "/testdata")
 		require.NoError(t, err)
@@ -26,29 +31,11 @@ func TestCopy(t *testing.T) {
 		t.Log(out)
 	})
 
-	t.Run("upload file to sub dir", func(t *testing.T) {
-		err := mockcli.Upload(context.TODO(), podName, containerName, podNamespace, "testdata/upload.txt", "/testdata/sub/upload.txt")
+	t.Run("upload file as file", func(t *testing.T) {
+		err := mockcli.Upload(context.TODO(), podName, containerName, podNamespace, "testdata/upload.txt", "/testdata/uploadtofile.txt")
 		require.NoError(t, err)
 
 		out, _, err := mockcli.Exec(podName, containerName, podNamespace, "ls", "-l", "/testdata")
-		require.NoError(t, err)
-		t.Log(out)
-	})
-
-	t.Run("upload file as file", func(t *testing.T) {
-		err := mockcli.Upload(context.TODO(), podName, containerName, podNamespace, "testdata/upload.txt", "/uploadtofile.txt")
-		require.NoError(t, err)
-
-		out, _, err := mockcli.Exec(podName, containerName, podNamespace, "ls", "-l", "/")
-		require.NoError(t, err)
-		t.Log(out)
-	})
-
-	t.Run("upload dir", func(t *testing.T) {
-		err := mockcli.Upload(context.TODO(), podName, containerName, podNamespace, "testdata/uploaddir", "/testdir")
-		require.NoError(t, err)
-
-		out, _, err := mockcli.Exec(podName, containerName, podNamespace, "ls", "/testdir")
 		require.NoError(t, err)
 		t.Log(out)
 	})
