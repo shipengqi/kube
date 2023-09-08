@@ -65,7 +65,7 @@ func main() {
 	}
 	log.Println(stdout)
 
-	// Exec in a pod, is like "kubectl exec <pod name> -n <namespace> -c <container name> -- <command>"
+	// Uploads local file to a remote pod
 	err = cli.Upload(context.TODO(), "podname", "containername", "namespace", "testdata/upload.txt", "/testdata")
 	if err != nil {
 		log.Fatal(err)

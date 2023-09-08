@@ -18,8 +18,7 @@ import (
 	"k8s.io/client-go/tools/remotecommand"
 )
 
-// Download downloads file from a remote pod to local file system
-// kubectl cp <pod-name>:/tmp/foo /tmp/bar -c <container-name> -n <namespace>
+// Download downloads file from a remote pod to local file system.
 // Requires that the 'tar' binary is present in your container
 // image.  If 'tar' is not present, 'Download' will fail.
 func (c *Client) Download(ctx context.Context, pod, container, namespace, src, dst string) error {
@@ -61,8 +60,7 @@ func (c *Client) Download(ctx context.Context, pod, container, namespace, src, d
 	return nil
 }
 
-// Upload uploads local file to a remote pod in the given namespace
-// kubectl cp /tmp/foo <pod-name>:/tmp/bar -c <container-name> -n <namespace>
+// Upload uploads local file to a remote pod.
 // Requires that the 'tar' binary is present in your container
 // image.  If 'tar' is not present, 'Upload' will fail.
 func (c *Client) Upload(ctx context.Context, pod, container, namespace, src, dst string) error {
