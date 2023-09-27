@@ -10,6 +10,7 @@ example:
 
 documentation:
   - docs/**/*
+  - README.md
 
 dependencies:
   - go.mod
