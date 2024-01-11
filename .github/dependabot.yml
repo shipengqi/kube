@@ -1,6 +1,8 @@
 version: 2
 updates:
   - package-ecosystem: "gomod"
+    assignees:
+      - "shipengqi"
     directory: "/"
     schedule:
       interval: "daily"
@@ -11,6 +13,8 @@ updates:
       prefix: "feat"
       include: "scope"
   - package-ecosystem: "github-actions"
+    assignees:
+      - "shipengqi"
     directory: "/"
     schedule:
       interval: "daily"
