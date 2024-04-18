@@ -1,0 +1,32 @@
+# This is an example .goreleaser.yml file with some sensible defaults.
+# Make sure to check the documentation at https://goreleaser.com
+
+changelog:
+  sort: asc
+  use: github
+  filters:
+    exclude:
+      - '^Merge'
+  groups:
+    - title: 'New Features'
+      regexp: "^.*feat.*:+.*$"
+      order: 100
+    - title: 'Bug Fixes'
+      regexp: "^.*fix.*:+.*$"
+      order: 200
+    - title: 'Dependency Updates'
+      regexp: "^.*(feat|fix)\\(deps\\)*:+.*$"
+      order: 300
+    - title: 'Documentation Updates'
+      regexp: "^.*docs.*:+.*$"
+      order: 400
+    - title: Other work
+      order: 9999
+release:
+  footer: |
+    **Full Changelog**: https://github.com/shipengqi/kube/compare/{{ .PreviousTag }}...{{ .Tag }}
+
+
+# modelines, feel free to remove those if you don't want/use them:
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+# vim: set ts=2 sw=2 tw=0 fo=cnqoj
