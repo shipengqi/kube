@@ -1,14 +1,14 @@
 module github.com/shipengqi/kube
 
-go 1.21
+go 1.22.0
 
 require (
 	github.com/stretchr/testify v1.9.0
-	k8s.io/api v0.29.4
-	k8s.io/apimachinery v0.29.4
-	k8s.io/cli-runtime v0.29.4
-	k8s.io/client-go v0.29.4
-	k8s.io/metrics v0.29.4
+	k8s.io/api v0.30.0
+	k8s.io/apimachinery v0.30.0
+	k8s.io/cli-runtime v0.30.0
+	k8s.io/client-go v0.30.0
+	k8s.io/metrics v0.30.0
 )
 
 require (
