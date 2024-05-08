@@ -6,10 +6,12 @@ on:
     paths-ignore:
       - 'docs/**'
       - 'README.md'
+      - '.goreleaser.yaml'
   pull_request:
     paths-ignore:
       - 'docs/**'
       - 'README.md'
+      - '.goreleaser.yaml'
 jobs:
   scan-source:
     name: scan-source
