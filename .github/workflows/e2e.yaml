@@ -6,11 +6,13 @@ on:
     paths-ignore:
       - 'docs/**'
       - 'README.md'
+      - '.goreleaser.yaml'
   pull_request:
     branches: [ main ]
     paths-ignore:
       - 'docs/**'
       - 'README.md'
+      - '.goreleaser.yaml'
 
 jobs:
   # Run E2E test against all kubernetes versions on kind
