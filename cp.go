@@ -210,7 +210,7 @@ func untar(reader io.Reader, dst, prefix string) error {
 				return err
 			}
 		case tar.TypeReg:
-			if err = createFile(tarReader, dstPath, os.FileMode(header.Mode)); err != nil {
+			if err = createFile(tarReader, dstPath, os.FileMode(uint32(header.Mode))); err != nil {
 				return err
 			}
 		}
