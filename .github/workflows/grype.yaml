@@ -2,7 +2,6 @@ name: "grype"
 on:
   push:
     branches: ['main']
-    tags: ['v*']
     paths-ignore:
       - 'docs/**'
       - 'README.md'
