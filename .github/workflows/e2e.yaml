@@ -21,11 +21,11 @@ jobs:
     strategy:
       matrix:
         k8s:
-          - 1.28.0
           - 1.29.0
           - 1.30.0
           - 1.31.0
           - 1.32.0
+          - 1.33.0
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
