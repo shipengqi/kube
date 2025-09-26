@@ -13,6 +13,8 @@ on:
       - 'docs/**'
       - 'README.md'
       - '.goreleaser.yaml'
+permissions:
+  contents: read
 
 jobs:
   # Run E2E test against all kubernetes versions on kind
@@ -21,11 +23,11 @@ jobs:
     strategy:
       matrix:
         k8s:
-          - 1.29.0
           - 1.30.0
           - 1.31.0
           - 1.32.0
           - 1.33.0
+          - 1.34.0
       fail-fast: false
     steps:
       - uses: actions/checkout@v5
