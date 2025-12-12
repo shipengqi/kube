@@ -8,7 +8,7 @@ require (
 	k8s.io/apimachinery v0.34.3
 	k8s.io/cli-runtime v0.34.3
 	k8s.io/client-go v0.34.3
-	k8s.io/metrics v0.34.2
+	k8s.io/metrics v0.34.3
 )
 
 require (
