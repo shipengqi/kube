@@ -14,11 +14,11 @@ jobs:
           fetch-depth: 0  # it is required fot the changelog to work correctly
       - uses: actions/setup-go@v6
         with:
-          go-version: 1.24
+          go-version: stable
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v7
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           distribution: goreleaser
           version: latest
