@@ -155,6 +155,17 @@ func makeTar(src, dst string) error {
 func tarf(writer io.Writer, src string) error {
 	tw := tar.NewWriter(writer)
 	defer func() { _ = tw.Close() }()
+
+	srcAbs, err := filepath.Abs(src)
+	if err != nil {
+		return err
+	}
+	root, err := os.OpenRoot(filepath.Dir(srcAbs))
+	if err != nil {
+		return err
+	}
+	defer func() { _ = root.Close() }()
+
 	return filepath.Walk(src, func(filename string, info fs.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -164,24 +175,27 @@ func tarf(writer io.Writer, src string) error {
 			return err
 		}
 		header.Name = strings.TrimPrefix(filename, string(filepath.Separator))
-		// write file info
 		if err = tw.WriteHeader(header); err != nil {
 			return err
 		}
-		// whether info describes a regular file.
 		if !info.Mode().IsRegular() {
 			return nil
 		}
-		fr, err := os.Open(filename)
+		absFilename, err := filepath.Abs(filename)
+		if err != nil {
+			return err
+		}
+		rel, err := filepath.Rel(filepath.Dir(srcAbs), absFilename)
+		if err != nil {
+			return err
+		}
+		fr, err := root.Open(rel)
 		if err != nil {
 			return err
 		}
 		defer func() { _ = fr.Close() }()
 		_, err = io.Copy(tw, fr)
-		if err != nil {
-			return err
-		}
-		return nil
+		return err
 	})
 }
 
