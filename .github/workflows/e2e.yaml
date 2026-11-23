@@ -31,7 +31,7 @@ jobs:
       fail-fast: false
     steps:
       - uses: actions/checkout@v7
-      - uses: helm/kind-action@v1.15.1
+      - uses: helm/kind-action@v1.15.2
       - name: Prepare
         run: kubectl apply -f testdata/nginx.yaml
       - name: Readiness
